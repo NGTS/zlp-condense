@@ -10,6 +10,7 @@ class FileList {
         long nfiles();
         long napertures();
         void parse();
+        const std::string first() const;
 
         std::vector<std::string>::iterator begin() { return _files.begin(); }
         std::vector<std::string>::iterator end() { return _files.end(); }

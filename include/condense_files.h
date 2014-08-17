@@ -10,7 +10,7 @@ class FileCondenser {
 
     private:
         std::string _filelist;
-        long _nfiles;
+        long _nfiles, _napertures;
 
         void load_data();
 };

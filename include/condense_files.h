@@ -10,12 +10,12 @@
 
 struct Catalogue {
     std::vector<std::string> obj_id;
-    std::vector<double> mean_flux;
+    std::vector<double> flux_mean;
     std::vector<long> npts;
 
     Catalogue(long n) :
         obj_id(std::vector<std::string>(n)),
-        mean_flux(std::vector<double>(n)),
+        flux_mean(std::vector<double>(n)),
         npts(std::vector<long>(n)) {}
 };
 

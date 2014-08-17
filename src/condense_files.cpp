@@ -10,7 +10,7 @@ namespace {
         long counter = 0;
         ifstream infile(filelist);
         if (infile.is_open()) {
-            while (!infile.eof()) {
+            for (string line; getline(infile, line);) {
                 counter++;
             }
         }
@@ -22,7 +22,7 @@ namespace {
 FileCondenser::FileCondenser(const string &filelist)
 : _filelist(filelist) {
     _nfiles = get_filelist_length(_filelist);
-    cout << "Working with " << _nfiles << "files" << endl;
+    cout << "Working with " << _nfiles << " files" << endl;
 }
 
 void FileCondenser::render(const string &output) {

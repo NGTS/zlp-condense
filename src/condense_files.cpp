@@ -128,6 +128,8 @@ void FileCondenser::read_image_hdus(fitsfile *fptr, int *status, long index) {
 }
 
 void FileCondenser::read_imagelist_row(fitsfile *fptr, int *status, long index) {
+    fits_read_key(fptr, TDOUBLE, "airmass", &_imagelist->airmass[index], NULL, status);
+    fits_read_key(fptr, TDOUBLE, "mjd", &_imagelist->tmid[index], NULL, status);
 }
 
 void FileCondenser::read_catalogue() {
@@ -161,5 +163,15 @@ void FileCondenser::render_catalogue(fitsfile *fptr, int *status) {
 }
 
 void FileCondenser::render_imagelist(fitsfile *fptr, int *status) {
+    LONGLONG naxis2 = _nfiles;
+    int tfields = 2;
+    char *ttype[] = {"airmass", "tmid"};
+    char *tform[] = {"D", "D"};
+    char *tunit[] = {"", "MJD"};
+
+    fits_create_tbl(fptr, BINARY_TBL, naxis2, tfields, ttype, tform, tunit, "IMAGELIST", status);
+
+    fits_write_col(fptr, TDOUBLE, 1, 1, 1, _nfiles, &_imagelist->airmass[0], status);
+    fits_write_col(fptr, TDOUBLE, 2, 1, 1, _nfiles, &_imagelist->tmid[0], status);
 }
 

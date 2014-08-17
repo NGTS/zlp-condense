@@ -21,9 +21,12 @@ struct Catalogue {
 
 struct Imagelist {
     std::vector<double> airmass;
+    std::vector<double> tmid;
 
     Imagelist(long n) :
-        airmass(std::vector<double>(n)) {}
+        airmass(std::vector<double>(n)),
+        tmid(std::vector<double>(n))
+    {}
 };
 
 class FileCondenser {

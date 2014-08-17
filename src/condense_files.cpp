@@ -60,6 +60,9 @@ void FileCondenser::load_data() {
     _nfiles = _filelist->nfiles();
     _napertures = _filelist->napertures();
 
+    _catalogue.reset(new Catalogue(_napertures));
+    _imagelist.reset(new Imagelist(_nfiles));
+
     cout << "Condensing " << _nfiles << " files" << endl;
     cout << "Condensing " << _napertures << " apertures" << endl;
 

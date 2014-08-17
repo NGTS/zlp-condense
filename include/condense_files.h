@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-class FileList;
+#include "filelist.h"
 
 class FileCondenser {
     public:

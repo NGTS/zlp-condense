@@ -1,6 +1,7 @@
 CFITSIO=/usr/local
-BOOST=/usr/local
-CFLAGS=-I$(CFITSIO)/include -I$(BOOST)/include
+BOOST=/usr/local/include
+TCLAP=/usr/local
+CFLAGS=-I$(CFITSIO)/include -I$(BOOST) -I$(TCLAP)/include
 LDFLAGS=-L$(CFITSIO)/lib -lcfitsio
 COMMON=-g -O0 -Wall -Wextra -Wno-deprecated-writable-strings
 CXX=clang++

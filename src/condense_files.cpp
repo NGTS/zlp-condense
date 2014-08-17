@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <fitsio.h>
+#include <string>
 
 #include "filelist.h"
 #include "fits_column.h"
@@ -12,6 +13,7 @@
     fits_write_pix(fptr, TDOUBLE, fpixel, _nfiles * _napertures, &data[0], &status); \
     fits_write_key_str(fptr, "EXTNAME", name, NULL, &status);
 
+#define isnan(a) a != a
 
 using namespace std;
 
@@ -28,6 +30,8 @@ void FileCondenser::render(const string &output) {
         index++;
     }
 
+    read_catalogue();
+
     fitsfile *fptr;
     int status = 0;
     long naxes[] = {_nfiles, _napertures};
@@ -35,8 +39,8 @@ void FileCondenser::render(const string &output) {
 
     fits_create_file(&fptr, output.c_str(), &status);
 
-    // Make a blank first image
-
+    render_catalogue(fptr, &status);
+    render_imagelist(fptr, &status);
     // Now the other hdus
     RENDER_ARRAY(_mjd_arr, "HJD");
     RENDER_ARRAY(_flux_arr, "FLUX");

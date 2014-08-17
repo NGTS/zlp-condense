@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 #include <fitsio.h>
+#include <boost/scoped_ptr.hpp>
 
 #include "filelist.h"
 
@@ -37,11 +38,11 @@ class FileCondenser {
     private:
         std::string _filelist_name;
         long _nfiles, _napertures;
-        std::unique_ptr<FileList> _filelist;
+        boost::scoped_ptr<FileList> _filelist;
 
         std::vector<double> _mjd_arr, _flux_arr, _skybkg_arr, _ccdx_arr, _ccdy_arr;
-        std::unique_ptr<Catalogue> _catalogue;
-        std::unique_ptr<Imagelist> _imagelist;
+        boost::scoped_ptr<Catalogue> _catalogue;
+        boost::scoped_ptr<Imagelist> _imagelist;
 
         void load_data();
         void read_file(const std::string &fname, long index);

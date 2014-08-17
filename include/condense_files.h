@@ -7,6 +7,12 @@ class FileCondenser {
     public:
         FileCondenser(const std::string &filelist);
         void render(const std::string &output);
+
+    private:
+        std::string _filelist;
+        long _nfiles;
+
+        void load_data();
 };
 
 

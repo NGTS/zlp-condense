@@ -5,34 +5,9 @@
 #include <fitsio.h>
 
 #include "filelist.h"
+#include "fits_column.h"
 
 using namespace std;
-
-namespace {
-    struct FitsColumn {
-        int _colnum;
-        vector<double> _data;
-        int _size;
-
-        FitsColumn(int n) : _size(n) {
-            _data.resize(n);
-        }
-
-        void read(fitsfile *fptr, const string &colname) {
-            int status = 0;
-            fits_get_colnum(fptr, CASEINSEN, (char*)colname.c_str(), &_colnum, &status);
-            fits_read_col(fptr, TDOUBLE, _colnum, 1, 1, _size, NULL, &_data[0],
-                    NULL, &status);
-
-            if (status) {
-                fits_report_error(stderr, status);
-                exit(status);
-            }
-
-        }
-    };
-}
-
 
 FileCondenser::FileCondenser(const string &filelist_name)
 : _filelist_name(filelist_name) {

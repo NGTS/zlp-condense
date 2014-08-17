@@ -3,26 +3,13 @@
 #include <fstream>
 #include <iostream>
 
+#include "filelist.h"
+
 using namespace std;
 
-namespace {
-    long get_filelist_length(const string &filelist) {
-        long counter = 0;
-        ifstream infile(filelist);
-        if (infile.is_open()) {
-            for (string line; getline(infile, line);) {
-                counter++;
-            }
-        }
-        infile.close();
-        return counter;
-    }
-}
 
 FileCondenser::FileCondenser(const string &filelist)
 : _filelist(filelist) {
-    _nfiles = get_filelist_length(_filelist);
-    cout << "Working with " << _nfiles << " files" << endl;
 }
 
 void FileCondenser::render(const string &output) {
@@ -30,4 +17,12 @@ void FileCondenser::render(const string &output) {
 }
 
 void FileCondenser::load_data() {
+    FileList f(_filelist);
+    f.parse();
+
+    _nfiles = f.nfiles();
+    _napertures = f.napertures();
+
+    cout << "Condensing " << _nfiles << " files" << endl;
+    cout << "Condensing " << _napertures << " apertures" << endl;
 }

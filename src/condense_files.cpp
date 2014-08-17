@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <fitsio.h>
 
 #include "filelist.h"
 
@@ -14,6 +15,14 @@ FileCondenser::FileCondenser(const string &filelist_name)
 
 void FileCondenser::render(const string &output) {
     load_data();
+
+    long index = 0;
+    for (auto fname=_filelist->begin(); fname!=_filelist->end(); fname++) {
+        read_file(*fname, index);
+        index++;
+    }
+
+    return;
 }
 
 void FileCondenser::load_data() {
@@ -33,5 +42,28 @@ void FileCondenser::initialize() {
     _mjd_arr.resize(_nfiles * _napertures);
     _flux_arr.resize(_nfiles * _napertures);
 }
+
+void FileCondenser::read_file(const string &fname, long index) {
+    fitsfile *fptr;
+    int status = 0;
+    double mjd = 0;
+
+    fits_open_file(&fptr, fname.c_str(), READONLY, &status);
+    fits_movrel_hdu(fptr, 1, 0, &status);
+
+    fits_read_key(fptr, TDOUBLE, "mjd", &mjd, NULL, &status);
+
+    for (long ap=0; ap<_napertures; ap++) {
+        long _write_index = index * _napertures + ap;
+
+        _mjd_arr[_write_index] = mjd;
+    }
+
+    fits_close_file(fptr, &status);
+
+    if (status) {
+        fits_report_error(stderr, status);
+        exit(status);
+    }
 
 }

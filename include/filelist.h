@@ -11,6 +11,9 @@ class FileList {
         long napertures();
         void parse();
 
+        std::vector<std::string>::iterator begin() { return _files.begin(); }
+        std::vector<std::string>::iterator end() { return _files.end(); }
+
     private:
         std::string _fname;
         std::vector<std::string> _files;

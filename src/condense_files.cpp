@@ -25,4 +25,13 @@ void FileCondenser::load_data() {
 
     cout << "Condensing " << _nfiles << " files" << endl;
     cout << "Condensing " << _napertures << " apertures" << endl;
+
+    initialize();
+}
+
+void FileCondenser::initialize() {
+    _mjd_arr.resize(_nfiles * _napertures);
+    _flux_arr.resize(_nfiles * _napertures);
+}
+
 }

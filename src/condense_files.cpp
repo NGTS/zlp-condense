@@ -8,6 +8,31 @@
 
 using namespace std;
 
+namespace {
+    struct FitsColumn {
+        int _colnum;
+        vector<double> _data;
+        int _size;
+
+        FitsColumn(int n) : _size(n) {
+            _data.resize(n);
+        }
+
+        void read(fitsfile *fptr, const string &colname) {
+            int status = 0;
+            fits_get_colnum(fptr, CASEINSEN, (char*)colname.c_str(), &_colnum, &status);
+            fits_read_col(fptr, TDOUBLE, _colnum, 1, 1, _size, NULL, &_data[0],
+                    NULL, &status);
+
+            if (status) {
+                fits_report_error(stderr, status);
+                exit(status);
+            }
+
+        }
+    };
+}
+
 
 FileCondenser::FileCondenser(const string &filelist_name)
 : _filelist_name(filelist_name) {
@@ -47,16 +72,20 @@ void FileCondenser::read_file(const string &fname, long index) {
     fitsfile *fptr;
     int status = 0;
     double mjd = 0;
+    FitsColumn flux(_napertures);
 
     fits_open_file(&fptr, fname.c_str(), READONLY, &status);
     fits_movrel_hdu(fptr, 1, 0, &status);
 
     fits_read_key(fptr, TDOUBLE, "mjd", &mjd, NULL, &status);
 
+    flux.read(fptr, "core2_flux");
+
     for (long ap=0; ap<_napertures; ap++) {
         long _write_index = index * _napertures + ap;
 
         _mjd_arr[_write_index] = mjd;
+        _flux_arr[_write_index] = flux._data[ap];
     }
 
     fits_close_file(fptr, &status);

@@ -1,9 +1,15 @@
-CFITSIO=/usr/local
-BOOST=/usr/local/include
-TCLAP=/usr/local
+include Makefile.$(shell hostname)
+
 CFLAGS=-I$(CFITSIO)/include -I$(BOOST) -I$(TCLAP)/include
 LDFLAGS=-L$(CFITSIO)/lib -lcfitsio
-COMMON=-g -O0 -Wall -Wextra -Wno-deprecated-writable-strings
+COMMON=-Wall -Wextra -Wno-deprecated-writable-strings -pthread
+
+ifdef RELEASE
+	COMMON += -O2
+else
+	COMMON += -O0 -g 
+endif
+
 CXX=clang++
 RUN=bin/condense
 

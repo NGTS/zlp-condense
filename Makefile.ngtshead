@@ -1,0 +1,3 @@
+CFITSIO=/usr/local/cfitsio
+BOOST=$(HOME)/ngts-git/boost/src
+TCLAP=$(HOME)/ngts-git/tclap

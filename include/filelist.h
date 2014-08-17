@@ -18,6 +18,8 @@ class FileList {
     private:
         std::string _fname;
         std::vector<std::string> _files;
+
+        void sort_filelist();
 };
 
 #endif // FILELIST_H_

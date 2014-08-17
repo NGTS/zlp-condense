@@ -120,7 +120,7 @@ void FileCondenser::read_image_hdus(fitsfile *fptr, int *status, long index) {
         ccdy.write(&_ccdy_arr[_write_index], ap);
 
         if (!isnan(flux.at(ap))) {
-            _catalogue->mean_flux[ap] += flux.at(ap);
+            _catalogue->flux_mean[ap] += flux.at(ap);
             _catalogue->npts[ap]++;
         }
     }
@@ -133,7 +133,11 @@ void FileCondenser::read_imagelist_row(fitsfile *fptr, int *status, long index) 
 void FileCondenser::read_catalogue() {
     for (int i=0; i<_napertures; i++) {
         _catalogue->obj_id[i] = to_string(i);
-        _catalogue->mean_flux[i] /= double(_catalogue->npts[i]);
+        if (_catalogue->npts[i] > 0) {
+            _catalogue->flux_mean[i] /= double(_catalogue->npts[i]);
+        } else {
+            _catalogue->flux_mean[i] = 0;
+        }
     }
 }
 

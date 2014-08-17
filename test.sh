@@ -14,7 +14,7 @@ compile() {
 
 run() {
     echo "Run"
-    bin/condense testdata/filelist.txt -o testdata/output.fits
+    /usr/bin/time bin/condense testdata/filelist.txt -o testdata/output.fits
 }
 
 teardown() {

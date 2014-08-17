@@ -22,7 +22,7 @@ void FileCondenser::render(const string &output) {
         index++;
     }
 
-    return;
+
 }
 
 void FileCondenser::load_data() {
@@ -41,13 +41,14 @@ void FileCondenser::load_data() {
 void FileCondenser::initialize() {
     _mjd_arr.resize(_nfiles * _napertures);
     _flux_arr.resize(_nfiles * _napertures);
+    _skybkg_arr.resize(_nfiles * _napertures);
 }
 
 void FileCondenser::read_file(const string &fname, long index) {
     fitsfile *fptr;
     int status = 0;
     double mjd = 0;
-    FitsColumn flux(_napertures);
+    FitsColumn flux(_napertures), skybkg(_napertures);
 
     fits_open_file(&fptr, fname.c_str(), READONLY, &status);
     fits_movrel_hdu(fptr, 1, 0, &status);
@@ -55,12 +56,14 @@ void FileCondenser::read_file(const string &fname, long index) {
     fits_read_key(fptr, TDOUBLE, "mjd", &mjd, NULL, &status);
 
     flux.read(fptr, "core2_flux");
+    skybkg.read(fptr, "skylev");
 
     for (long ap=0; ap<_napertures; ap++) {
         long _write_index = index * _napertures + ap;
 
         _mjd_arr[_write_index] = mjd;
-        _flux_arr[_write_index] = flux._data[ap];
+        flux.write(&_flux_arr[_write_index], ap);
+        skybkg.write(&_skybkg_arr[_write_index], ap);
     }
 
     fits_close_file(fptr, &status);

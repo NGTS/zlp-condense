@@ -17,7 +17,7 @@ class FileCondenser {
         long _nfiles, _napertures;
         std::unique_ptr<FileList> _filelist;
 
-        std::vector<double> _mjd_arr, _flux_arr;
+        std::vector<double> _mjd_arr, _flux_arr, _skybkg_arr;
 
         void load_data();
         void read_file(const std::string &fname, long index);

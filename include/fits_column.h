@@ -10,6 +10,7 @@ class FitsColumn {
         FitsColumn(int n);
         void read(fitsfile *fptr, const std::string &colname);
         void write(double *element, long index);
+        double at(int index) { return _data.at(index); };
 
     private:
         int _colnum;

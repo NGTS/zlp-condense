@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+set -e
+
 setup() {
     echo "Setup"
-    test -f testdata/output.fits && rm testdata/output.fits
+    test -f testdata/output.fits && rm testdata/output.fits || true
 }
 
 compile() {

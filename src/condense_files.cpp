@@ -145,10 +145,19 @@ void FileCondenser::render_catalogue(fitsfile *fptr, int *status) {
     LONGLONG naxis2 = _napertures;
     int tfields = 3;
     char *ttype[] = {"obj_id", "flux_mean", "npts"};
-    char *tform[] = {"S26", "D", "U"};
+    char *tform[] = {"26A", "D", "U"};
     char *tunit[] = {"", "counts", ""};
 
     fits_create_tbl(fptr, BINARY_TBL, naxis2, tfields, ttype, tform, tunit, "CATALOGUE", status);
+
+    char *obj_id[_napertures];
+    for (int i=0; i<_napertures; i++) {
+        obj_id[i] = const_cast<char*>(_catalogue->obj_id[i].c_str());
+    }
+
+    fits_write_col_str(fptr, 1, 1, 1, _napertures, obj_id, status);
+    fits_write_col(fptr, TDOUBLE, 2, 1, 1, _napertures, &_catalogue->flux_mean[0], status);
+    fits_write_col(fptr, TUINT, 3, 1, 1, _napertures, &_catalogue->npts[0], status);
 }
 
 void FileCondenser::render_imagelist(fitsfile *fptr, int *status) {

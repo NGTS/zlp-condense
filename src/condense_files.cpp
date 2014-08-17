@@ -80,13 +80,26 @@ void FileCondenser::initialize() {
 void FileCondenser::read_file(const string &fname, long index) {
     fitsfile *fptr;
     int status = 0;
-    double mjd = 0;
-    FitsColumn flux(_napertures), skybkg(_napertures), ccdx(_napertures), ccdy(_napertures);
 
     fits_open_file(&fptr, fname.c_str(), READONLY, &status);
     fits_movrel_hdu(fptr, 1, 0, &status);
 
-    fits_read_key(fptr, TDOUBLE, "mjd", &mjd, NULL, &status);
+    read_image_hdus(fptr, &status, index);
+    read_imagelist_row(fptr, &status, index);
+    fits_close_file(fptr, &status);
+
+    if (status) {
+        fits_report_error(stderr, status);
+        exit(status);
+    }
+}
+
+void FileCondenser::read_image_hdus(fitsfile *fptr, int *status, long index) {
+    double mjd = 0;
+
+    FitsColumn flux(_napertures), skybkg(_napertures), ccdx(_napertures), ccdy(_napertures);
+
+    fits_read_key(fptr, TDOUBLE, "mjd", &mjd, NULL, status);
 
     flux.read(fptr, "core2_flux");
     skybkg.read(fptr, "skylev");
@@ -101,13 +114,35 @@ void FileCondenser::read_file(const string &fname, long index) {
         skybkg.write(&_skybkg_arr[_write_index], ap);
         ccdx.write(&_ccdx_arr[_write_index], ap);
         ccdy.write(&_ccdy_arr[_write_index], ap);
-    }
 
-    fits_close_file(fptr, &status);
-
-    if (status) {
-        fits_report_error(stderr, status);
-        exit(status);
+        if (!isnan(flux.at(ap))) {
+            _catalogue->mean_flux[ap] += flux.at(ap);
+            _catalogue->npts[ap]++;
+        }
     }
 
 }
+
+void FileCondenser::read_imagelist_row(fitsfile *fptr, int *status, long index) {
+}
+
+void FileCondenser::read_catalogue() {
+    for (int i=0; i<_napertures; i++) {
+        _catalogue->obj_id[i] = to_string(i);
+        _catalogue->mean_flux[i] /= double(_catalogue->npts[i]);
+    }
+}
+
+void FileCondenser::render_catalogue(fitsfile *fptr, int *status) {
+    LONGLONG naxis2 = _napertures;
+    int tfields = 3;
+    char *ttype[] = {"obj_id", "flux_mean", "npts"};
+    char *tform[] = {"S26", "D", "U"};
+    char *tunit[] = {"", "counts", ""};
+
+    fits_create_tbl(fptr, BINARY_TBL, naxis2, tfields, ttype, tform, tunit, "CATALOGUE", status);
+}
+
+void FileCondenser::render_imagelist(fitsfile *fptr, int *status) {
+}
+

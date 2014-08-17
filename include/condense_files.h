@@ -42,7 +42,12 @@ class FileCondenser {
 
         void load_data();
         void read_file(const std::string &fname, long index);
+        void read_image_hdus(fitsfile *fptr, int *status, long index);
+        void read_imagelist_row(fitsfile *fptr, int *status, long index);
+        void read_catalogue();
         void initialize();
+        void render_catalogue(fitsfile *fptr, int *status);
+        void render_imagelist(fitsfile *fptr, int *status);
 };
 
 

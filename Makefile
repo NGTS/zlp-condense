@@ -14,8 +14,8 @@ $(RUN): $(OBJECTS)
 	$(CXX) $^ -o $@ $(COMMON) $(LDFLAGS)
 
 %.o: %.cpp
-	$(CXX) $< -o $@ -c $(COMMON) $(CFLAGS)
-
+	$(CXX) $< -o $@ -c $(COMMON) $(CFLAGS) -Iinclude
+ 
 clean:
 	rm -f $(OBJECTS)
 	rm -f $(RUN)

@@ -2,14 +2,14 @@ CFLAGS=
 LDFLAGS=
 COMMON=-g -Wall -Wextra
 CXX=clang++
-RUN=condense
+RUN=bin/condense
 
 SOURCES=$(wildcard src/*.cpp)
 OBJECTS=$(SOURCES:.cpp=.o)
 
 all: $(RUN)
 
-condense: $(OBJECTS)
+$(RUN): $(OBJECTS)
 	$(CXX) $^ -o $@ $(COMMON) $(LDFLAGS)
 
 %.o: %.cpp

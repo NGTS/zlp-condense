@@ -1,2 +1,4 @@
 *.o
 *.dSYM
+testdata/*
+!testdata/.gitkeep

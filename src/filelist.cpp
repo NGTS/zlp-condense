@@ -38,3 +38,7 @@ void FileList::parse() {
         _files.push_back(line);
     }
 }
+
+const string FileList::first() const {
+    return _files.at(0);
+}

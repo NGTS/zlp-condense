@@ -14,6 +14,8 @@ int main(int argc, const char *argv[]) {
 
         cmd.parse(argc, argv);
 
+        FileCondenser(filelist_arg.getValue()).render(output_arg.getValue());
+
         return 0;
 
     } catch (TCLAP::ArgException &e) {

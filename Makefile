@@ -1,5 +1,6 @@
-CFLAGS=
-LDFLAGS=-lcfitsio
+CFITSIO=/usr/local
+CFLAGS=-I$(CFITSIO)/include
+LDFLAGS=-L$(CFITSIO)/lib -lcfitsio
 COMMON=-g -Wall -Wextra
 CXX=clang++
 RUN=bin/condense

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 #include <fitsio.h>
 
 using namespace std;

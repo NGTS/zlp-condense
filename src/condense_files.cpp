@@ -8,8 +8,8 @@
 using namespace std;
 
 
-FileCondenser::FileCondenser(const string &filelist)
-: _filelist(filelist) {
+FileCondenser::FileCondenser(const string &filelist_name)
+: _filelist_name(filelist_name) {
 }
 
 void FileCondenser::render(const string &output) {
@@ -17,11 +17,11 @@ void FileCondenser::render(const string &output) {
 }
 
 void FileCondenser::load_data() {
-    FileList f(_filelist);
-    f.parse();
+    _filelist.reset(new FileList(_filelist_name));
+    _filelist->parse();
 
-    _nfiles = f.nfiles();
-    _napertures = f.napertures();
+    _nfiles = _filelist->nfiles();
+    _napertures = _filelist->napertures();
 
     cout << "Condensing " << _nfiles << " files" << endl;
     cout << "Condensing " << _napertures << " apertures" << endl;

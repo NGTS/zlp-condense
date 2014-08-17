@@ -33,7 +33,7 @@ long FileList::napertures() {
 }
 
 void FileList::parse() {
-    ifstream infile(_fname);
+    ifstream infile(_fname.c_str());
     for (string line; getline(infile, line);) {
         _files.push_back(line);
     }

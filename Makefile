@@ -1,7 +1,8 @@
 CFITSIO=/usr/local
-CFLAGS=-I$(CFITSIO)/include
+BOOST=/usr/local
+CFLAGS=-I$(CFITSIO)/include -I$(BOOST)/include
 LDFLAGS=-L$(CFITSIO)/lib -lcfitsio
-COMMON=-g -O0 -Wall -Wextra -std=c++0x -stdlib=libc++ -Wno-deprecated-writable-strings
+COMMON=-g -O0 -Wall -Wextra -Wno-deprecated-writable-strings
 CXX=clang++
 RUN=bin/condense
 

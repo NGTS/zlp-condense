@@ -1,7 +1,7 @@
 CFITSIO=/usr/local
 CFLAGS=-I$(CFITSIO)/include
 LDFLAGS=-L$(CFITSIO)/lib -lcfitsio
-COMMON=-g -Wall -Wextra -std=c++0x -stdlib=libc++
+COMMON=-g -O0 -Wall -Wextra -std=c++0x -stdlib=libc++
 CXX=clang++
 RUN=bin/condense
 

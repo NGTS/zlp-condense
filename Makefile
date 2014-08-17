@@ -1,5 +1,5 @@
 CFLAGS=
-LDFLAGS=
+LDFLAGS=-lcfitsio
 COMMON=-g -Wall -Wextra
 CXX=clang++
 RUN=bin/condense

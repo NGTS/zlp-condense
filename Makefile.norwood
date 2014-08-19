@@ -1,0 +1,4 @@
+BUILD_PREFIX=${HOME}/storage/prefix
+CFITSIO=${BUILD_PREFIX}
+BOOST=$(HOME)/ngts-git/boost/src
+TCLAP=${BUILD_PREFIX}

@@ -3,6 +3,7 @@
 #include <string>
 
 #include <tclap/CmdLine.h>
+#include <fits++.h>
 
 #include "condense.h"
 
@@ -25,5 +26,8 @@ int main(int argc, char *argv[]) {
         std::cerr << "error: " << e.error() << " for arg " << e.argId()
                   << std::endl;
         return 1;
+    } catch (fitspp::FITSException *e) {
+        std::cout << "FITS exception status=" << e->status << " "
+                  << e->userMessage << std::endl;
     }
 }

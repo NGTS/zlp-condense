@@ -1,4 +1,2 @@
-CXX := g++
-CFLAGS += -I$(NGTS)/ngts-git/fits++
-LDFLAGS += -L$(NGTS)/ngts-git/fits++
+FITSPPDIR := $(NGTS)/ngts-git/fits++
 

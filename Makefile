@@ -10,7 +10,7 @@ CXX := g++
 
 CFLAGS :=
 LDFLAGS := -lfits++ -lcfitsio
-COMMON := -g -O0
+COMMON := -g -O0 -Wall -Wextra
 
 include Makefile.$(shell hostname -s)
 

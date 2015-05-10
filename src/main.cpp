@@ -3,12 +3,8 @@
 #include <string>
 
 #include <tclap/CmdLine.h>
-#include <fitsio.h>
-#include <fits++.h>
 
-void condense_files(const std::vector<std::string> &files,
-        const std::string &output_filename) {
-}
+#include "condense.h"
 
 int main(int argc, char *argv[]) {
 
@@ -21,7 +17,7 @@ int main(int argc, char *argv[]) {
             "files", "Files to condense", true, "file", cmd);
         cmd.parse(argc, argv);
 
-        condense_files(input_files_arg.getValue(), output_arg.getValue());
+        Condenser(input_files_arg.getValue()).render(output_arg.getValue());
 
         return 0;
 

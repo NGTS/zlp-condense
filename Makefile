@@ -8,7 +8,7 @@ COMMON := -g -O0
 
 CXX := g++
 
-CFLAGS :=
+CFLAGS := -Iinclude
 LDFLAGS := -lfits++ -lcfitsio
 COMMON := -g -O0 -Wall -Wextra
 

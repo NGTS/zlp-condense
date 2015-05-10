@@ -17,5 +17,11 @@ void Condenser::render(const string &output_filename) {
 }
 
 void Condenser::compute_output_file_dimensions() {
-    auto first = FITSFile::openFile(this->files[0]);
+    nimages = files.size();
+    FITSFile *first = FITSFile::openFile(this->files[0]);
+    FITSBinaryTable *data_table = first->findBinaryTable("apm-binarytable");
+    napertures = data_table->getNumRows();
+
+    cout << "Found " << napertures << " apertures and " << nimages << " images"
+         << endl;
 }

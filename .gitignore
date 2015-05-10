@@ -1,6 +1,0 @@
-*.o
-*.dSYM
-testdata/*
-!testdata/.gitkeep
-bin/*
-!bin/.gitkeep

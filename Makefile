@@ -1,3 +1,5 @@
+include Makefile.$(shell hostname -s)
+
 RUN := zlp-condense
 SOURCES := $(wildcard src/*.cpp)
 OBJECTS := $(SOURCES:.cpp=.o)
@@ -8,11 +10,10 @@ COMMON := -g -O0
 
 CXX := g++
 
-CFLAGS := -Iinclude
-LDFLAGS := -lfits++ -lcfitsio
+CFLAGS := -I$(FITSPPDIR) -Iinclude
+LDFLAGS := -L$(FITSPPDIR) -lfits++ -lcfitsio -lbz2
 COMMON := -g -O0 -Wall -Wextra
 
-include Makefile.$(shell hostname -s)
 
 all: $(RUN)
 

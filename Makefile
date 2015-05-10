@@ -12,7 +12,7 @@ CXX := g++
 
 CFLAGS := -I$(FITSPPDIR) -Iinclude
 LDFLAGS := -L$(FITSPPDIR) -lfits++ -lcfitsio -lbz2
-COMMON := -g -O0 -Wall -Wextra
+COMMON := -g -O0 -Wall -Wextra -std=c++11
 
 
 all: $(RUN)

@@ -11,7 +11,12 @@ class Condenser {
     void render(const std::string &output_filename);
 
   private:
+
+    void compute_output_file_dimensions();
+
+
     std::vector<std::string> files;
+    long napertures, nimages;
 };
 
 #endif /* end of include guard: CONDENSE_H */

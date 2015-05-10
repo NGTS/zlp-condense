@@ -1,4 +1,4 @@
-include Makefile.$(shell hostname)
+include Makefile.$(shell hostname -s)
 
 CFLAGS=-I$(CFITSIO)/include -I$(BOOST) -I$(TCLAP)/include
 LDFLAGS=-L$(CFITSIO)/lib -lcfitsio

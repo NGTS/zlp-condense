@@ -18,7 +18,7 @@ class Condenser {
 
   private:
     void compute_output_file_dimensions();
-    void initialiseOutputFile(auto_ptr<fitspp::FITSFile> &f);
+    void initialiseOutputFile(unique_ptr<fitspp::FITSFile> &f);
 
     std::vector<std::string> files;
     long napertures, nimages;

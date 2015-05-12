@@ -19,7 +19,7 @@ namespace {
     }
 }
 
-void Table::initialise(auto_ptr<fitspp::FITSFile> &f, const string &filename,
+void Table::initialise(unique_ptr<fitspp::FITSFile> &f, const string &filename,
                        long size) {
     rapidjson::Document document;
     ifstream in(filename);

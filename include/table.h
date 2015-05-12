@@ -14,7 +14,7 @@ class Table {
   public:
     Table(const std::string &tablename);
 
-    void initialise(std::unique_ptr<fitspp::FITSFile> &f,
+    void initialise(fitspp::FITSFile *f,
                     const std::string &filename, long size);
 
     void add(const std::string &name, double value);

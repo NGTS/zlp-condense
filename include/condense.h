@@ -4,7 +4,6 @@
 
 #include <vector>
 #include <string>
-#include <memory>
 #include <map>
 
 #include <fits++.h>
@@ -18,7 +17,7 @@ class Condenser {
 
   private:
     void compute_output_file_dimensions();
-    void initialiseOutputFile(unique_ptr<fitspp::FITSFile> &f);
+    void initialiseOutputFile(fitspp::FITSFile *f);
 
     std::vector<std::string> files;
     long napertures, nimages;

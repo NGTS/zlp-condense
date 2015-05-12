@@ -6,12 +6,12 @@ using namespace std;
 using namespace fitspp;
 
 namespace {
-auto_ptr<FITSFile> openFitsFile(const string &filename) {
-    return auto_ptr<FITSFile>(FITSFile::openFile(filename));
+unique_ptr<FITSFile> openFitsFile(const string &filename) {
+    return unique_ptr<FITSFile>(FITSFile::openFile(filename));
 }
 
-auto_ptr<FITSFile> createFitsFile(const string &filename) {
-    return auto_ptr<FITSFile>(FITSFile::createFile(filename));
+unique_ptr<FITSFile> createFitsFile(const string &filename) {
+    return unique_ptr<FITSFile>(FITSFile::createFile(filename));
 }
 
 vector<string> imageHDUNames = {"HJD",  "FLUX", "FLUXERR",
@@ -25,7 +25,7 @@ Condenser::Condenser(const vector<string> &files)
 
 void Condenser::compute_output_file_dimensions() {
     nimages = files.size();
-    auto_ptr<FITSFile> first = openFitsFile(this->files[0]);
+    unique_ptr<FITSFile> first = openFitsFile(this->files[0]);
     FITSBinaryTable *data_table = first->findBinaryTable("apm-binarytable");
     napertures = data_table->getNumRows();
 
@@ -37,7 +37,7 @@ void Condenser::render(const string &output_filename) {
     cout << "Rendering to " << output_filename << endl;
     compute_output_file_dimensions();
 
-    auto_ptr<FITSFile> output = createFitsFile(output_filename);
+    unique_ptr<FITSFile> output = createFitsFile(output_filename);
     initialiseOutputFile(output);
 
     for (int i = 0; i < nimages; i++) {
@@ -61,7 +61,7 @@ void Condenser::render(const string &output_filename) {
     output->closeFile();
 }
 
-void Condenser::initialiseOutputFile(auto_ptr<FITSFile> &f) {
+void Condenser::initialiseOutputFile(unique_ptr<FITSFile> &f) {
     f->addEmptyPrimary();
     for (auto name : imageHDUNames) {
         long axes[] = {nimages, napertures};

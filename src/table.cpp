@@ -4,13 +4,14 @@
 #include <sstream>
 #include <cmath>
 #include <algorithm>
+#include <stdexcept>
 #include <rapidjson/document.h>
 
 Table::Table(const string &tablename) : tablename(tablename), table(NULL) {}
 
 #define ASSERT_PRESENT                                                         \
     if (colNames.find(name) == colNames.end()) {                               \
-        throw runtime_error("Invalid column name");                            \
+        throw std::runtime_error("Invalid column name");                            \
     }
 
 namespace {
@@ -22,7 +23,7 @@ namespace {
 void Table::initialise(fitspp::FITSFile *f, const string &filename,
                        long size) {
     rapidjson::Document document;
-    ifstream in(filename);
+    ifstream in(filename.c_str());
     if (in) {
         ostringstream contents;
         contents << in.rdbuf();

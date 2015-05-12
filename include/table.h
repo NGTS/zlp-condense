@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include "source_file.h"
 
 class Table {
   public:
@@ -16,16 +17,20 @@ class Table {
     void initialise(std::auto_ptr<fitspp::FITSFile> &f,
                     const std::string &filename, long size);
 
-    void addDouble(const std::string &name, double value);
-    void addLong(const std::string &name, long value);
-    void addInt(const std::string &name, int value);
+    void add(const std::string &name, double value);
+    void add(const std::string &name, long value);
+    void add(const std::string &name, int value);
+    void render();
+    void addFromSourceFile(const SourceFile &s);
 
   private:
     std::string tablename;
     std::set<std::string> colNames;
-    std::map<std::string, std::vector<double> > doubleMap;
-    std::map<std::string, std::vector<int> > intMap;
-    std::map<std::string, std::vector<long> > longMap;
+    std::map<std::string, std::string> typeMap;
+    std::map<std::string, std::vector<double>> doubleMap;
+    std::map<std::string, std::vector<int>> intMap;
+    std::map<std::string, std::vector<long>> longMap;
+    fitspp::FITSBinaryTable *table;
 };
 
 class ImageList : public Table {

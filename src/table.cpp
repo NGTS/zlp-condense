@@ -4,7 +4,7 @@
 #include <sstream>
 #include <rapidjson/document.h>
 
-Table::Table(const string &tablename) : tablename(tablename) {}
+Table::Table(const string &tablename) : tablename(tablename), table(NULL) {}
 
 #define ASSERT_PRESENT                                                         \
     if (colNames.find(name) == colNames.end()) {                               \
@@ -29,6 +29,7 @@ void Table::initialise(auto_ptr<fitspp::FITSFile> &f, const string &filename,
         auto description = itr->value["type"].GetString();
 
         colNames.insert(name);
+        typeMap.insert(pair<string, string>(name, description));
 
         ss << name << "/" << description;
         if (itr != end - 1) {
@@ -37,18 +38,42 @@ void Table::initialise(auto_ptr<fitspp::FITSFile> &f, const string &filename,
     }
     auto defs = ss.str();
     cout << defs << endl;
-    auto table = f->addBinaryTable(tablename, defs, size);
+    table = f->addBinaryTable(tablename, defs);
 }
 
-void Table::addDouble(const std::string &name, double value) {
+void Table::add(const std::string &name, double value) {
     ASSERT_PRESENT;
     doubleMap[name].push_back(value);
 }
-void Table::addLong(const std::string &name, long value) {
+void Table::add(const std::string &name, long value) {
     ASSERT_PRESENT;
     longMap[name].push_back(value);
 }
-void Table::addInt(const std::string &name, int value) {
+void Table::add(const std::string &name, int value) {
     ASSERT_PRESENT;
     intMap[name].push_back(value);
+}
+
+void Table::addFromSourceFile(const SourceFile &s) {
+    for (auto type : typeMap) {
+        if (type.second == "1D") {
+            add(type.first, double(s.readKeyword(type.first)));
+        } else if (type.second == "1J") {
+            add(type.first, long(s.readKeyword(type.first)));
+        } else if (type.second == "1I") {
+            add(type.first, int(s.readKeyword(type.first)));
+        }
+    }
+}
+
+void Table::render() {
+    for (auto type : typeMap) {
+        if (type.second == "1D") {
+            table->writeColumn(type.first, doubleMap[type.first], 0);
+        } else if (type.second == "1J") {
+            table->writeColumn(type.first, longMap[type.first], 0);
+        } else if (type.second == "1I") {
+            table->writeColumn(type.first, intMap[type.first], 0);
+        }
+    }
 }

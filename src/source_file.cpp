@@ -54,3 +54,7 @@ void SourceFile::writeData(vector<double> &data, FITSImage *imageHDU,
     long lpixel[] = {image + 1, napertures + 1};
     imageHDU->writeImageSubset(data, fpixel, lpixel);
 }
+
+FITSKeyword SourceFile::readKeyword(const std::string &name) const {
+    return table->readKeyword(name);
+}

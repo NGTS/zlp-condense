@@ -4,6 +4,10 @@
 
 #include <vector>
 #include <string>
+#include <memory>
+#include <map>
+
+#include <fits++.h>
 
 class Condenser {
   public:
@@ -11,12 +15,12 @@ class Condenser {
     void render(const std::string &output_filename);
 
   private:
-
     void compute_output_file_dimensions();
-
+    void initialiseOutputFile(auto_ptr<fitspp::FITSFile> &f);
 
     std::vector<std::string> files;
     long napertures, nimages;
+    std::map<std::string, fitspp::FITSImage*> images;
 };
 
 #endif /* end of include guard: CONDENSE_H */

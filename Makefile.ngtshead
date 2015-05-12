@@ -1,0 +1,5 @@
+FITSPPDIR := $(NGTS)/ngts-git/fits++
+CXX := icpc
+
+CFLAGS_EXTRA := -I/usr/local/cfitsio/include -I/usr/local/tclap/include
+LDFLAGS_EXTRA := -L/usr/local/cfitsio/lib -pthread

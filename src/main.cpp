@@ -14,11 +14,11 @@ int main(int argc, char *argv[]) {
         TCLAP::CmdLine cmd("ZLP condense", ' ', "0.1");
         TCLAP::ValueArg<std::string> output_arg(
             "o", "output", "Output file name", true, "", "file", cmd);
-        TCLAP::UnlabeledMultiArg<std::string> input_files_arg(
-            "files", "Files to condense", true, "file", cmd);
+        TCLAP::UnlabeledValueArg<std::string> filelist_arg(
+            "filelist", "Files to condense", true, "", "file", cmd);
         cmd.parse(argc, argv);
 
-        Condenser(input_files_arg.getValue()).render(output_arg.getValue());
+        Condenser(filelist_arg.getValue()).render(output_arg.getValue());
 
         return 0;
 

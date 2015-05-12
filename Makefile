@@ -5,11 +5,9 @@ SOURCES := $(wildcard src/*.cpp)
 HEADERS := $(wildcard include/*.h)
 OBJECTS := $(SOURCES:.cpp=.o)
 
-CXX := g++-4.9
-
-CFLAGS := -I$(FITSPPDIR) -Iinclude -I$(shell pwd)/external/rapidjson/include
-LDFLAGS := -L$(FITSPPDIR) -lfits++ -lcfitsio -lbz2
-COMMON := -g -O0 -Wall -Wextra -std=c++11
+CFLAGS := -I$(FITSPPDIR) -Iinclude -I$(shell pwd)/external/rapidjson/include $(CFLAGS_EXTRA)
+LDFLAGS := -L$(FITSPPDIR) -lfits++ -lcfitsio -lbz2 $(LDFLAGS_EXTRA)
+COMMON := -g -O0 -Wall -Wextra -std=c++11 $(COMMON_EXTRA)
 
 all: $(RUN)
 

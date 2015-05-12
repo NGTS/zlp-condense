@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "condense.h"
 #include "source_file.h"
 
@@ -9,9 +10,14 @@ namespace {
 string imageHDUNames[] = { "HJD", "FLUX", "FLUXERR", "CCDX", "CCDY", "SKYBKG" };
 }
 
-Condenser::Condenser(const vector<string> &files)
-    : files(files), napertures(0), nimages(0) {
-  cout << "Number of files: " << files.size() << endl;
+Condenser::Condenser(const string &filelist)
+    : napertures(0), nimages(0) {
+    ifstream infile(filelist.c_str());
+    string name;
+    while (infile >> name) {
+        files.push_back(name);
+    }
+    cout << "Number of files: " << files.size() << endl;
 }
 
 void Condenser::compute_output_file_dimensions() {

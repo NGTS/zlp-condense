@@ -11,19 +11,19 @@
 #include "table.h"
 
 class Condenser {
-public:
-  Condenser(const std::vector<std::string> &files);
-  void render(const std::string &output_filename);
+  public:
+    Condenser(const std::string &filelist);
+    void render(const std::string &output_filename);
 
-private:
-  void compute_output_file_dimensions();
-  void initialiseOutputFile(fitspp::FITSFile *f);
+  private:
+    void compute_output_file_dimensions();
+    void initialiseOutputFile(fitspp::FITSFile *f);
 
-  std::vector<std::string> files;
-  long napertures, nimages;
-  std::map<std::string, fitspp::FITSImage *> images;
-  ImageList imagelist;
-  Catalogue catalogue;
+    std::vector<std::string> files;
+    long napertures, nimages;
+    std::map<std::string, fitspp::FITSImage*> images;
+    ImageList imagelist;
+    Catalogue catalogue;
 };
 
 #endif /* end of include guard: CONDENSE_H */

@@ -9,6 +9,8 @@
 
 #include <fits++.h>
 
+#include "table.h"
+
 class Condenser {
   public:
     Condenser(const std::vector<std::string> &files);
@@ -21,6 +23,8 @@ class Condenser {
     std::vector<std::string> files;
     long napertures, nimages;
     std::map<std::string, fitspp::FITSImage*> images;
+    ImageList imagelist;
+    Catalogue catalogue;
 };
 
 #endif /* end of include guard: CONDENSE_H */

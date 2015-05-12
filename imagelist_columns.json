@@ -1,0 +1,13 @@
+{
+    "columns": {
+        "MJD": {
+            "type": "1D"
+        },
+        "AG_ERRX": {
+            "type": "1D"
+        },
+        "AG_ERRY": {
+            "type": "1D"
+        }
+    }
+}

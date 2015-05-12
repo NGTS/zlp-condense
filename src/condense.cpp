@@ -63,4 +63,7 @@ void Condenser::initialiseOutputFile(auto_ptr<FITSFile> &f) {
         auto image = f->addImage(name, doubleImg, 2, axes);
         images.insert(pair<string, FITSImage *>(name, image));
     }
+
+    imagelist.initialise(f, "imagelist_columns.json", nimages);
+    catalogue.initialise(f, "catalogue_columns.json", napertures);
 }

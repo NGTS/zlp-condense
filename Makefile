@@ -5,7 +5,7 @@ SOURCES := $(wildcard src/*.cpp)
 HEADERS := $(wildcard include/*.h)
 OBJECTS := $(SOURCES:.cpp=.o)
 
-CXX := g++
+CXX := g++-4.9
 
 CFLAGS := -I$(FITSPPDIR) -Iinclude -I$(shell pwd)/external/rapidjson/include
 LDFLAGS := -L$(FITSPPDIR) -lfits++ -lcfitsio -lbz2

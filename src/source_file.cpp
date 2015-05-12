@@ -42,10 +42,15 @@ void SourceFile::addMJD(FITSImage *imageHDU, int image, int napertures) {
     writeData(hjdCorrection, imageHDU, image, napertures);
 }
 
-vector<double> SourceFile::readData(const string &source_key, int napertures) {
+vector<double> SourceFile::readData(const string &source_key, int napertures) const {
     vector<double> data(napertures);
     table->readColumnNull(source_key, &data[0], nullval);
     return data;
+}
+
+vector<double> SourceFile::readData(const string &source_key) const {
+    long nrows = table->getNumRows();
+    return readData(source_key, nrows);
 }
 
 void SourceFile::writeData(vector<double> &data, FITSImage *imageHDU,

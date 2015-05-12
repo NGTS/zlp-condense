@@ -23,14 +23,16 @@ class Table {
     void render();
     void addFromSourceFile(const SourceFile &s);
 
+  protected:
+    std::set<std::string> colNames;
+    fitspp::FITSBinaryTable *table;
+
   private:
     std::string tablename;
-    std::set<std::string> colNames;
     std::map<std::string, std::string> typeMap;
     std::map<std::string, std::vector<double>> doubleMap;
     std::map<std::string, std::vector<int>> intMap;
     std::map<std::string, std::vector<long>> longMap;
-    fitspp::FITSBinaryTable *table;
 };
 
 class ImageList : public Table {
@@ -41,6 +43,7 @@ class ImageList : public Table {
 class Catalogue : public Table {
   public:
     Catalogue() : Table("CATALOGUE") {}
+    void render(const SourceFile &s);
 };
 
 #endif /* end of include guard: TABLE_H */

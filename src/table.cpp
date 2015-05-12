@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <cmath>
+#include <algorithm>
 #include <rapidjson/document.h>
 
 Table::Table(const string &tablename) : tablename(tablename), table(NULL) {}
@@ -10,6 +12,12 @@ Table::Table(const string &tablename) : tablename(tablename), table(NULL) {}
     if (colNames.find(name) == colNames.end()) {                               \
         throw runtime_error("Invalid column name");                            \
     }
+
+namespace {
+    double degrees(double rad) {
+        return rad * 180.0 / M_PI;
+    }
+}
 
 void Table::initialise(auto_ptr<fitspp::FITSFile> &f, const string &filename,
                        long size) {
@@ -75,5 +83,17 @@ void Table::render() {
         } else if (type.second == "1I") {
             table->writeColumn(type.first, intMap[type.first], 0);
         }
+    }
+}
+
+void Catalogue::render(const SourceFile &s){
+    for (auto name : colNames) {
+        ASSERT_PRESENT;
+        vector<double> data = s.readData(name);
+        if ((name == "RA") || (name == "DEC")) {
+            /* Convert to degrees */
+            for_each(data.begin(), data.end(), degrees);
+        }
+        table->writeColumn(name, data, 0);
     }
 }

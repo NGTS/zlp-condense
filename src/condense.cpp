@@ -51,7 +51,11 @@ void Condenser::render(const string &output_filename) {
         source_file.addData("X_coordinate", images["CCDX"], i, napertures);
         source_file.addData("Y_coordinate", images["CCDY"], i, napertures);
         source_file.addData("Sky_level", images["SKYBKG"], i, napertures);
+
+        imagelist.addFromSourceFile(source_file);
     }
+
+    imagelist.render();
 
     output->closeFile();
 }

@@ -9,15 +9,17 @@
 class SourceFile {
   public:
     SourceFile(const std::string &filename);
+    ~SourceFile();
+
     void addData(const std::string &source_key, fitspp::FITSImage *imageHDU,
                  int image, int napertures);
     void addMJD(fitspp::FITSImage *imageHDU, int image, int napertures);
-    ~SourceFile();
+    fitspp::FITSKeyword readKeyword(const std::string &name) const;
 
   private:
     vector<double> readData(const std::string &source_key, int napertures);
-    void writeData(vector<double> &data, fitspp::FITSImage *imageHDU,
-                   int image, int napertures);
+    void writeData(vector<double> &data, fitspp::FITSImage *imageHDU, int image,
+                   int napertures);
 
     fitspp::FITSFile *f;
     fitspp::FITSBinaryTable *table;

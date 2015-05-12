@@ -56,6 +56,7 @@ void Condenser::render(const string &output_filename) {
     }
 
     imagelist.render();
+    catalogue.render(SourceFile(files[0]));
 
     output->closeFile();
 }

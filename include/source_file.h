@@ -15,9 +15,10 @@ class SourceFile {
                  int image, int napertures);
     void addMJD(fitspp::FITSImage *imageHDU, int image, int napertures);
     fitspp::FITSKeyword readKeyword(const std::string &name) const;
+    vector<double> readData(const std::string &source_key, int napertures) const;
+    vector<double> readData(const std::string &source_key) const;
 
   private:
-    vector<double> readData(const std::string &source_key, int napertures);
     void writeData(vector<double> &data, fitspp::FITSImage *imageHDU, int image,
                    int napertures);
 

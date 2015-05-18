@@ -36,6 +36,10 @@ Condenser::~Condenser() {
 void Condenser::render(const string &filename) {
     outputFile_ = FITSFile::createFile(filename);
     initialiseOutputFile();
+
+    for (auto input_filename : filenames_) {
+        FITSFile source(input_filename);
+    }
 }
 
 void Condenser::initialiseOutputFile() {

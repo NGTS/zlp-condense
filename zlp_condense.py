@@ -66,9 +66,11 @@ def main(args):
         ('FLUX_MEAN', np.float64),
         ('FLUX_MEDIAN', np.float64),
         ('BLEND_FRACTION', np.float32),
+        ('NPTS', np.int64),
         ])
     catalogue_data['OBJ_ID'] = np.array(['NG{:06d}'.format(i) for i in
         np.arange(napertures)])
+    catalogue_data['NPTS'] = np.ones(napertures) * nimages
     catalogue_data['RA'] = np.degrees(first.data['ra'])
     catalogue_data['DEC'] = np.degrees(first.data['dec'])
     catalogue_data['BLEND_FRACTION'] = np.zeros(napertures, dtype=np.float32)
@@ -78,6 +80,34 @@ def main(args):
         ('AIRMASS', np.float32),
         ('IMAGE_ID', np.int64),
         ('EXPOSURE', np.float32),
+        ('HICOUNT', np.int64),
+        ('LOCOUNT', np.int64),
+        ('CHSTEMP', np.float32),
+        ('CCDTEMP', np.float32),
+        ('TEL_RA', np.float32),
+        ('TEL_DEC', np.float32),
+        ('MOONDIST', np.float32),
+        ('MOONFRAC', np.float32),
+        ('WXTEMP', np.float32),
+        ('WXPRES', np.float32),
+        ('WXWNDSPD', np.float32),
+        ('WXWNDDIR', np.float32),
+        ('WXHUMID', np.float32),
+        ('WXDEWPNT', np.float32),
+        ('AG_ERRX', np.float32),
+        ('AG_ERRY', np.float32),
+        ('AG_CORRX', np.float32),
+        ('AG_CORRY', np.float32),
+        ('AG_DELTX', np.float32),
+        ('AG_DELTY', np.float32),
+        ('SKY_LEVEL', np.float32),
+        ('SKY_NOISE', np.float32),
+        ('NUMBRMS', np.int64),
+        ('STDCRMS', np.float32),
+        ('WCSF_NS', np.int64),
+        ('WCSF_RMS', np.float32),
+        ('WCSF_RA', np.float32),
+        ('WCSF_DEC', np.float64),
         ])
 
     image = lambda name: FITSImage(name, nimages, napertures)
@@ -88,9 +118,13 @@ def main(args):
         source = SourceFile.open_file(filename)
         mjd = source.header['mjd']
         imagelist_data['TMID'][i] = mjd
-        imagelist_data['AIRMASS'][i] = source.header['airmass']
-        imagelist_data['IMAGE_ID'][i] = source.header['image_id']
-        imagelist_data['EXPOSURE'][i] = source.header['exposure']
+        for key in ['airmass', 'image_id', 'exposure', 'chstemp',
+                'tel_ra', 'tel_dec', 'moondist', 'moonfrac',
+                'wxtemp', 'wxpres', 'wxwndspd', 'wxwnddir',
+                'wxdewpnt', 'ag_errx', 'ag_erry', 'ag_corrx', 'ag_corry',
+                'ag_deltx', 'ag_delty', 'numbrms', 'stdcrms',
+                'wcsf_ns', 'wcsf_rms', 'wcsf_ra', 'wcsf_dec']:
+            imagelist_data[key.upper()][i] = source.header[key]
 
         image_map['HJD'].set_data(i, mjd + source.data['hjd_correction'])
         image_map['FLUX'].set_data(i, source.data['Aper_flux_3'])
@@ -99,6 +133,8 @@ def main(args):
         image_map['CCDY'].set_data(i, source.data['Y_coordinate'])
         image_map['SKYBKG'].set_data(i, source.data['Sky_level'])
 
+    imagelist_data['LOCOUNT'] = np.zeros(nimages)
+    imagelist_data['HICOUNT'] = np.zeros(nimages)
     catalogue_data['FLUX_MEAN'] = np.mean(image_map['FLUX'].data, axis=1)
     catalogue_data['FLUX_MEDIAN'] = np.median(image_map['FLUX'].data, axis=1)
 

@@ -15,6 +15,12 @@ void removeNewline(string &s) {
   s.erase(remove(s.begin(), s.end(), '\n'), s.end());
 }
 double NULLVAL = NAN;
+
+struct AddVal {
+  double val;
+  AddVal(double v) : val(v) {}
+  void operator()(double &elem) const { elem += val; }
+};
 }
 
 Condenser::Condenser(const string &filename)
@@ -37,9 +43,7 @@ Condenser::Condenser(const string &filename)
   cout << "Number of apertures: " << napertures_ << endl;
 }
 
-Condenser::~Condenser() {
-    delete outputFile_;
-}
+Condenser::~Condenser() { delete outputFile_; }
 
 void Condenser::render(const string &filename) {
   outputFile_ = FITSFile::createFile(filename);
@@ -49,8 +53,22 @@ void Condenser::render(const string &filename) {
     string input_filename = filenames_[i];
     cout << "Extracting from " << input_filename << endl;
     FITSFile source(input_filename);
-    source.toHDU("APM-BINARYTABLE");
+    source.toHDU(1);
+    double mjd = -1;
+    fits_read_key(source.fptr_, TDOUBLE, "MJD", &mjd, NULL, &source.status_);
+    source.check();
 
+    source.toHDU("APM-BINARYTABLE");
+    vector<double> hjd_correction(napertures_);
+    int colnum = -1;
+    fits_get_colnum(source.fptr_, CASEINSEN, "hjd_correction", &colnum,
+                    &source.status_);
+    fits_read_col(source.fptr_, TDOUBLE, colnum, 1, 1, napertures_, NULL,
+                  &hjd_correction[0], NULL, &source.status_);
+    source.check();
+    for_each(hjd_correction.begin(), hjd_correction.end(), AddVal(mjd));
+
+    addToImage(hjd_correction, "HJD", i);
     addToImage(source, "FLUX", "Aper_flux_3", i);
     addToImage(source, "FLUXERR", "Aper_flux_3_err", i);
     addToImage(source, "SKYBKG", "Sky_level", i);
@@ -97,10 +115,15 @@ void Condenser::addToImage(FITSFile &source, const string &hduname,
                 &data[0], &anynull, &source.status_);
   source.check();
 
+  addToImage(data, hduname, image);
+}
+
+void Condenser::addToImage(const vector<double> &data, const string &hduname,
+                           long image) {
   outputFile_->toHDU(hduname);
   long fpixel[] = { image + 1, 1 };
   long lpixel[] = { image + 1, napertures_ + 1 };
-  fits_write_subset(outputFile_->fptr_, TDOUBLE, fpixel, lpixel, &data[0],
-                    &outputFile_->status_);
+  fits_write_subset(outputFile_->fptr_, TDOUBLE, fpixel, lpixel,
+                    (void *)&data[0], &outputFile_->status_);
   outputFile_->check();
 }

@@ -17,6 +17,8 @@ private:
   void initialiseOutputFile();
   void addToImage(FITSFile &source, const std::string &hduname,
                   const std::string &column_name, long image);
+  void addToImage(const std::vector<double> &data, const std::string &hduname,
+                  long image);
 
   std::string filename_;
   FITSFile *outputFile_;

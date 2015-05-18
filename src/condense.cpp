@@ -39,6 +39,7 @@ void Condenser::render(const string &filename) {
 
     for (auto input_filename : filenames_) {
         FITSFile source(input_filename);
+        source.toHDU("APM-BINARYTABLE");
     }
 }
 

@@ -3,6 +3,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include "fits_file.h"
 
 using namespace std;
@@ -38,10 +39,21 @@ void Condenser::render(const string &filename) {
 }
 
 void Condenser::initialiseOutputFile() {
-    const vector<string> names = {
+    const vector<string> imagelistNames = {
         "HJD", "FLUX", "FLUXERR", "CCDX", "CCDY", "SKYBKG",
     };
-    for (auto name : names) {
+    for (auto name : imagelistNames) {
         outputFile_->addImage(name, nimages_, napertures_);
     }
+
+    const vector<pair<string, int>> imagelistColumns = {
+        {"TMID", TDOUBLE},
+    };
+
+    const vector<pair<string, int>> catalogueColumns = {
+        {"RA", TDOUBLE}, {"DEC", TDOUBLE},
+    };
+
+    outputFile_->addTable("IMAGELIST", imagelistColumns, nimages_);
+    outputFile_->addTable("CATALOGUE", catalogueColumns, napertures_);
 }

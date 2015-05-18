@@ -3,6 +3,7 @@
 #define FITS_FILE_H
 
 #include <string>
+#include <vector>
 #include <fitsio.h>
 
 struct FITSFile {
@@ -20,6 +21,8 @@ struct FITSFile {
     void toHDU(int hdu_number);
 
     void addImage(const std::string &name, long nimages, long napertures);
+    void addTable(const std::string &name,
+                  const std::vector<std::pair<std::string, int> > &columns, long size);
 
     void check();
 };

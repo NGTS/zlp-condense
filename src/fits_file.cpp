@@ -1,4 +1,7 @@
 #include <iostream>
+#include <vector>
+#include <map>
+#include <valarray>
 #include "fits_file.h"
 
 using namespace std;
@@ -54,6 +57,39 @@ void FITSFile::addImage(const string &name, long nimages, long napertures) {
     long naxes[] = {nimages, napertures};
     fits_create_img(fptr_, DOUBLE_IMG, 2, naxes, &status_);
     check();
-    fits_write_key(fptr_, TSTRING, "EXTNAME", (void*)name.c_str(), NULL, &status_);
+    fits_write_key(fptr_, TSTRING, "EXTNAME", (void *)name.c_str(), NULL,
+                   &status_);
     check();
+}
+
+void FITSFile::addTable(const string &name,
+                        const vector<pair<string, int>> &columns, long size) {
+
+    int ncols = columns.size();
+    cout << "Creating table " << name << " with " << ncols << " columns"
+         << endl;
+    valarray<char *> colNames(ncols), colType(ncols);
+
+    for (int i = 0; i < ncols; i++) {
+        colNames[i] = (char *)columns[i].first.c_str();
+        switch (columns[i].second) {
+        case TDOUBLE:
+            colType[i] = (char *)"1D";
+            break;
+        case TINT:
+            colType[i] = (char *)"1J";
+            break;
+        case TLONG:
+            colType[i] = (char *)"1J";
+            break;
+        case TFLOAT:
+            colType[i] = (char *)"1E";
+            break;
+        }
+
+        cout << colNames[i] << " => " << colType[i] << endl;
+    }
+
+    fits_create_tbl(fptr_, BINARY_TBL, size, ncols, &colNames[0], &colType[0],
+                    NULL, name.c_str(), &status_);
 }

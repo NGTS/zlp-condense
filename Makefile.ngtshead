@@ -1,4 +1,3 @@
-FITSPPDIR := $(NGTS)/ngts-git/fits++
 CXX := icpc
 
 CFLAGS_EXTRA := -I/usr/local/cfitsio/include -I/usr/local/tclap/include

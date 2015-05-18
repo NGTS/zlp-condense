@@ -93,9 +93,9 @@ void Condenser::addToImage(FITSFile &source, const string &hduname,
                 &data[0], &anynull, &source.status_);
   source.check();
 
-  outputFile_->toHDU("FLUX");
+  outputFile_->toHDU(hduname);
   long fpixel[] = { image + 1, 1 };
-  long lpixel[] = { image + 1, napertures_ };
+  long lpixel[] = { image + 1, napertures_ + 1 };
   fits_write_subset(outputFile_->fptr_, TDOUBLE, fpixel, lpixel, &data[0],
                     &outputFile_->status_);
   outputFile_->check();

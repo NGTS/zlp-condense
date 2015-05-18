@@ -23,7 +23,7 @@ FITSFile *FITSFile::createFile(const string &filename) {
     return f;
 }
 
-FITSFile::FITSFile(const string &filename) : FITSFile() {
+FITSFile::FITSFile(const string &filename) : status_(0) {
     fits_open_file(&fptr_, filename.c_str(), READONLY, &status_);
     check();
 }

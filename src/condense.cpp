@@ -95,6 +95,16 @@ void Condenser::render(const string &filename) {
     addToImage(source, "SKYBKG", "Sky_level", i);
     addToImage(source, "CCDX", "X_coordinate", i);
     addToImage(source, "CCDY", "Y_coordinate", i);
+
+    addToImage(source, "FLUX_1", "Aper_flux_2", i);
+    addToImage(source, "FLUX_2", "Aper_flux_4", i);
+    addToImage(source, "FLUX_3", "Aper_flux_5", i);
+    addToImage(source, "FLUX_4", "Aper_flux_6", i);
+
+    addToImage(source, "ERROR_1", "Aper_flux_2_err", i);
+    addToImage(source, "ERROR_2", "Aper_flux_4_err", i);
+    addToImage(source, "ERROR_3", "Aper_flux_5_err", i);
+    addToImage(source, "ERROR_4", "Aper_flux_6_err", i);
   }
 }
 
@@ -106,6 +116,16 @@ void Condenser::initialiseOutputFile() {
   imageNames.push_back("CCDX");
   imageNames.push_back("CCDY");
   imageNames.push_back("SKYBKG");
+
+  imageNames.push_back("FLUX_1");
+  imageNames.push_back("FLUX_2");
+  imageNames.push_back("FLUX_3");
+  imageNames.push_back("FLUX_4");
+
+  imageNames.push_back("ERROR_1");
+  imageNames.push_back("ERROR_2");
+  imageNames.push_back("ERROR_3");
+  imageNames.push_back("ERROR_4");
 
   for (auto name : imageNames) {
     outputFile_->addImage(name, nimages_, napertures_);

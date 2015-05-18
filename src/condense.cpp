@@ -21,16 +21,37 @@ struct AddVal {
   AddVal(double v) : val(v) {}
   void operator()(double &elem) const { elem += val; }
 };
+
+double get_mjd(const string &filename) {
+  FITSFile source(filename);
+  double mjd = -1;
+  fits_read_key(source.fptr_, TDOUBLE, "MJD", &mjd, NULL, &source.status_);
+  source.check();
+  return mjd;
+}
+
 }
 
 Condenser::Condenser(const string &filename)
     : filename_(filename), outputFile_(NULL) {
   ifstream infile(filename.c_str());
   string tmp;
+  vector<pair<string, double> > sortList;
   while (infile >> tmp) {
     removeNewline(tmp);
-    filenames_.push_back(tmp);
+    sortList.push_back(pair<string, double>(tmp, get_mjd(tmp)));
   }
+
+  sort(sortList.begin(), sortList.end(),
+       [](const pair<string, double> & left,
+          const pair<string, double> & right) {
+    return left.second < right.second;
+  });
+
+  for (auto row : sortList) {
+      filenames_.push_back(row.first);
+  }
+
   nimages_ = filenames_.size();
 
   /* Get image dimensions */

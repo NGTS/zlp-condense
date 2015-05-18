@@ -1,10 +1,31 @@
 #include "condense.h"
+#include <sstream>
+#include <string>
+#include <fstream>
+#include <iostream>
 #include "fits_file.h"
 
 using namespace std;
 
 Condenser::Condenser(const string &filename)
-    : filename_(filename), outputFile_(NULL) {}
+    : filename_(filename), outputFile_(NULL) {
+    ifstream infile(filename);
+    string tmp;
+    while (infile >> tmp) {
+        filenames_.push_back(tmp);
+    }
+    nimages_ = filenames_.size();
+
+    FITSFile first(filenames_[0]);
+    fits_movnam_hdu(first.fptr_, BINARY_TBL, "APM-BINARYTABLE", 0, &first.status_);
+    first.check();
+
+    fits_get_num_rows(first.fptr_, &napertures_, &first.status_);
+    first.check();
+
+    cout << "Number of images: " << nimages_ << endl;
+    cout << "Number of apertures: " << napertures_ << endl;
+}
 
 Condenser::~Condenser() {
     if (outputFile_) {

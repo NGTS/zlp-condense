@@ -14,7 +14,7 @@ struct FITSFile {
     FITSFile(const std::string &filename);
     ~FITSFile(); 
 
-    static FITSFile createFile(const std::string &filename);
+    static FITSFile *createFile(const std::string &filename);
 
     void check();
 };

@@ -3,6 +3,15 @@
 
 using namespace std;
 
-Condenser::Condenser(const string &filename) : filename_(filename) {}
+Condenser::Condenser(const string &filename)
+    : filename_(filename), outputFile_(NULL) {}
 
-void Condenser::render(const string &filename) {}
+Condenser::~Condenser() {
+    if (outputFile_) {
+        delete outputFile_;
+    }
+}
+
+void Condenser::render(const string &filename) {
+    outputFile_ = FITSFile::createFile(filename);
+}

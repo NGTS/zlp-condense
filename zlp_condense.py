@@ -112,6 +112,8 @@ def main(args):
 
     image = lambda name: FITSImage(name, nimages, napertures)
     image_names = ['HJD', 'FLUX', 'FLUXERR', 'CCDX', 'CCDY', 'SKYBKG']
+    image_names.extend(['FLUX_{}'.format(i + 1) for i in list(range(4))])
+    image_names.extend(['ERROR_{}'.format(i + 1) for i in list(range(4))])
     image_map = { name: image(name) for name in image_names }
 
     for i, filename in enumerate(sorted_images):
@@ -132,6 +134,14 @@ def main(args):
         image_map['CCDX'].set_data(i, source.data['X_coordinate'])
         image_map['CCDY'].set_data(i, source.data['Y_coordinate'])
         image_map['SKYBKG'].set_data(i, source.data['Sky_level'])
+
+        for (image_index, image_key) in enumerate([2, 4, 5, 6]):
+            hdu_key = 'FLUX_{}'.format(image_index + 1)
+            error_key = 'ERROR_{}'.format(image_index + 1)
+            source_flux_key = 'Aper_flux_{}'.format(image_key)
+            source_error_key = '{}_err'.format(source_flux_key)
+            image_map[hdu_key].set_data(i, source.data[source_flux_key])
+            image_map[error_key].set_data(i, source.data[source_error_key])
 
     imagelist_data['LOCOUNT'] = np.zeros(nimages)
     imagelist_data['HICOUNT'] = np.zeros(nimages)

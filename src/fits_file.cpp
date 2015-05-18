@@ -23,16 +23,14 @@ FITSFile *FITSFile::createFile(const string &filename) {
     return f;
 }
 
-FITSFile::FITSFile(const string &filename) : status_(0) {
+FITSFile::FITSFile(const string &filename) : FITSFile() {
     fits_open_file(&fptr_, filename.c_str(), READONLY, &status_);
     check();
 }
 
 FITSFile::~FITSFile() {
-    if (fptr_) {
-        fits_close_file(fptr_, &status_);
-        check();
-    }
+    fits_close_file(fptr_, &status_);
+    check();
 }
 
 void FITSFile::check() {
@@ -43,7 +41,7 @@ void FITSFile::check() {
 }
 
 void FITSFile::toHDU(const string &hdu_name) {
-    fits_movnam_hdu(fptr_, BINARY_TBL, const_cast<char *>(hdu_name.c_str()), 0,
+    fits_movnam_hdu(fptr_, ANY_HDU, const_cast<char *>(hdu_name.c_str()), 0,
                     &status_);
     check();
 }

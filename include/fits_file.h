@@ -10,7 +10,8 @@ struct FITSFile {
     fitsfile *fptr_;
     int status_;
 
-    FITSFile(fitsfile *fptr) : fptr_(fptr), status_(0) {}
+    FITSFile(fitsfile *fptr, int status) : fptr_(fptr), status_(status) {}
+    FITSFile(fitsfile *fptr) : FITSFile(fptr, 0) {}
     FITSFile() : FITSFile(NULL) {}
     FITSFile(const std::string &filename);
     ~FITSFile();

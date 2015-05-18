@@ -52,6 +52,10 @@ void Condenser::render(const string &filename) {
     source.toHDU("APM-BINARYTABLE");
 
     addToImage(source, "FLUX", "Aper_flux_3", i);
+    addToImage(source, "FLUXERR", "Aper_flux_3_err", i);
+    addToImage(source, "SKYBKG", "Sky_level", i);
+    addToImage(source, "CCDX", "X_coordinate", i);
+    addToImage(source, "CCDY", "Y_coordinate", i);
   }
 }
 

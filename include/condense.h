@@ -14,6 +14,7 @@ class Condenser {
     void render(const std::string &filename);
 
   private:
+    void initialiseOutputFile();
     std::string filename_;
     FITSFile *outputFile_;
     long nimages_, napertures_;

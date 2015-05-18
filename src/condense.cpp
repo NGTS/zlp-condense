@@ -16,10 +16,9 @@ Condenser::Condenser(const string &filename)
     }
     nimages_ = filenames_.size();
 
+    /* Get image dimensions */
     FITSFile first(filenames_[0]);
-    fits_movnam_hdu(first.fptr_, BINARY_TBL, "APM-BINARYTABLE", 0, &first.status_);
-    first.check();
-
+    first.toHDU("APM-BINARYTABLE");
     fits_get_num_rows(first.fptr_, &napertures_, &first.status_);
     first.check();
 
@@ -35,4 +34,14 @@ Condenser::~Condenser() {
 
 void Condenser::render(const string &filename) {
     outputFile_ = FITSFile::createFile(filename);
+    initialiseOutputFile();
+}
+
+void Condenser::initialiseOutputFile() {
+    const vector<string> names = {
+        "HJD", "FLUX", "FLUXERR", "CCDX", "CCDY", "SKYBKG",
+    };
+    for (auto name : names) {
+        outputFile_->addImage(name, nimages_, napertures_);
+    }
 }

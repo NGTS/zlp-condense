@@ -143,6 +143,8 @@ def main(args):
             image_map[hdu_key].set_data(i, source.data[source_flux_key])
             image_map[error_key].set_data(i, source.data[source_error_key])
 
+        del source
+
     imagelist_data['LOCOUNT'] = np.zeros(nimages)
     imagelist_data['HICOUNT'] = np.zeros(nimages)
     catalogue_data['FLUX_MEAN'] = np.mean(image_map['FLUX'].data, axis=1)

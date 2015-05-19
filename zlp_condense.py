@@ -316,7 +316,8 @@ def main(args):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    description = '''Extract data from `imcore_list` output'''
+    parser = argparse.ArgumentParser(description=description)
     parser.add_argument('filename', nargs='+')
     parser.add_argument('-o', '--output', required=True)
     parser.add_argument('-v', '--verbose', action='store_true')

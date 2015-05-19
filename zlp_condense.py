@@ -7,6 +7,7 @@ import logging
 from astropy.io import fits
 from contextlib import contextmanager
 import numpy as np
+from multiprocessing.dummy import Pool as ThreadPool
 
 logging.basicConfig(level='INFO', format='%(levelname)7s %(message)s')
 logger = logging.getLogger(__name__)
@@ -63,9 +64,13 @@ class FITSImage(object):
     def hdu(self):
         return fits.ImageHDU(self.data, name=self.name)
 
+def get_mjd(fname):
+    return fname, fits.getheader(fname)['mjd']
 
 def sort_by_mjd(files):
-    return sorted(files, key=lambda f: fits.getheader(f)['mjd'])
+    pool = ThreadPool()
+    mapping = pool.map(get_mjd, files)
+    return [row[0] for row in sorted(mapping, key=lambda row: row[1])]
 
 
 def main(args):
@@ -73,13 +78,16 @@ def main(args):
         logger.setLevel('DEBUG')
     logger.debug(args)
 
+    logger.info('Sorting images by mjd')
     sorted_images = sort_by_mjd(args.filename)
+
     nimages = len(sorted_images)
     first = SourceFile.open_file(sorted_images[0])
     napertures = len(first.data)
 
-    print('{:d} images, {:d} apertures'.format(nimages, napertures))
+    logger.info('{:d} images, {:d} apertures'.format(nimages, napertures))
 
+    logger.debug('Allocating memory for catalogue')
     catalogue_data = np.recarray(napertures,
                                  dtype=[('OBJ_ID', '26a'),
                                         ('RA', np.float64),
@@ -88,6 +96,8 @@ def main(args):
                                         ('FLUX_MEDIAN', np.float64),
                                         ('BLEND_FRACTION', np.float32),
                                         ('NPTS', np.int64),])
+
+    logger.debug('Filling catalogue data')
     catalogue_data['OBJ_ID'] = np.array(['NG{:06d}'.format(i)
                                          for i in np.arange(napertures)])
     catalogue_data['NPTS'] = np.ones(napertures) * nimages
@@ -95,6 +105,7 @@ def main(args):
     catalogue_data['DEC'] = np.degrees(first.data['dec'])
     catalogue_data['BLEND_FRACTION'] = np.zeros(napertures, dtype=np.float32)
 
+    logger.debug('Allocating memory for imagelist')
     imagelist_from_header_data_dtype = [('adu_max', np.float32),
                                         ('adu_mean', np.float32),
                                         ('adu_med', np.float32),
@@ -231,18 +242,21 @@ def main(args):
 
     imagelist_data = np.recarray(nimages, dtype=full_imagelist_data_type)
 
+    logger.debug('Allocating memory for image HDUs')
     image = lambda name: FITSImage(name, nimages, napertures)
     image_names = ['HJD', 'FLUX', 'FLUXERR', 'CCDX', 'CCDY', 'SKYBKG']
     image_names.extend(['FLUX_{}'.format(i + 1) for i in list(range(4))])
     image_names.extend(['ERROR_{}'.format(i + 1) for i in list(range(4))])
     image_map = {name: image(name) for name in image_names}
 
+    logger.info('Iterating over files')
     for i, filename in enumerate(sorted_images):
+        logger.info(filename)
         source = SourceFile.open_file(filename)
         image_filename = filename.replace('.phot', '')
         source_extract = SourceFile.open_file(image_filename.replace('.fits', '.cat'))
 
-        # Extract imagelist data
+        logger.debug('Extracting header data')
         mjd = source.header['mjd']
         imagelist_data['TMID'][i] = mjd
         for (key, typ) in imagelist_from_header_data_dtype:
@@ -269,7 +283,7 @@ def main(args):
 
         imagelist_data['NSOURCES'][i] = len(source_extract)
 
-        # Extract image data
+        logger.debug('Extracting image data')
         image_map['HJD'].set_data(i, mjd + source.data['hjd_correction'])
         image_map['FLUX'].set_data(i, source.data['Aper_flux_3'])
         image_map['FLUXERR'].set_data(i, source.data['Aper_flux_3_err'])
@@ -287,11 +301,13 @@ def main(args):
 
         del source
 
+    logger.info('Post processing')
     imagelist_data['LOCOUNT'] = np.zeros(nimages)
     imagelist_data['HICOUNT'] = np.zeros(nimages)
     catalogue_data['FLUX_MEAN'] = np.mean(image_map['FLUX'].data, axis=1)
     catalogue_data['FLUX_MEDIAN'] = np.median(image_map['FLUX'].data, axis=1)
 
+    logger.info('Rendering to %s', args.output)
     with create_output_file(args.output) as hdulist:
         hdulist.append(fits.BinTableHDU(imagelist_data, name='IMAGELIST'))
         hdulist.append(fits.BinTableHDU(catalogue_data, name='CATALOGUE'))

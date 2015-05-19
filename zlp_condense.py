@@ -13,6 +13,9 @@ logger = logging.getLogger(__name__)
 
 
 class SourceFile(object):
+    '''
+    Container for catalogue file
+    '''
 
     def __init__(self, hdulist):
         self.hdulist = hdulist
@@ -24,6 +27,19 @@ class SourceFile(object):
     def open_file(cls, filename):
         with fits.open(filename) as hdulist:
             return cls(hdulist)
+
+    def __len__(self):
+        return len(self.data)
+
+
+class Image(SourceFile):
+    '''
+    Container for source image
+    '''
+
+    def __init__(self, hdulist):
+        self.hdulist = hdulist
+        self.header = hdulist[0].header
 
 
 @contextmanager
@@ -79,8 +95,7 @@ def main(args):
     catalogue_data['DEC'] = np.degrees(first.data['dec'])
     catalogue_data['BLEND_FRACTION'] = np.zeros(napertures, dtype=np.float32)
 
-    imagelist_from_header_data_dtype = [('adu_dev', np.float32),
-                                        ('adu_max', np.float32),
+    imagelist_from_header_data_dtype = [('adu_max', np.float32),
                                         ('adu_mean', np.float32),
                                         ('adu_med', np.float32),
                                         ('afstatus', '8a'),
@@ -95,6 +110,8 @@ def main(args):
                                         ('agstatus', '8a'),
                                         ('airmass', np.float32),
                                         ('biasmean', np.float32),
+                                        ('biasover', np.float32),
+                                        ('biaspre', np.float32),
                                         ('bkg_mean', np.float32),
                                         ('bkg_rms', np.float32),
                                         ('cameraid', np.int32),
@@ -166,6 +183,8 @@ def main(args):
                                         ('tel_posa', np.float32),
                                         ('tel_ra', np.float32),
                                         ('threshol', np.float32),
+                                        ('vss_usec', np.float32),
+                                        ('wcscompl', np.bool),
                                         ('wcsf_dec', np.float64),
                                         ('wcsf_ns', np.int64),
                                         ('wcsf_ra', np.float32),
@@ -176,12 +195,11 @@ def main(args):
                                         ('wxtemp', np.float32),
                                         ('wxwnddir', np.float32),
                                         ('wxwndspd', np.float32),
-                                        ('vss_usec', np.float32),
-                                        ('wcscompl', np.bool),
                                         ('xencpos0', np.int64),
                                         ('xencpos1', np.int64),
                                         ('yencpos0', np.int64),
-                                        ('yencpos1', np.int64),]
+                                        ('yencpos1', np.int64),
+                                        ('adu_dev', np.float32),]
 
     imagelist_extra_dtype = [('cd1_1', np.float64),
                              ('cd1_2', np.float64),
@@ -200,9 +218,7 @@ def main(args):
                              ('hicount', np.int64),
                              ('locount', np.int64),
                              ('tmid', np.float64),
-                             ('overscan', np.float64),
-                             ('overscan_full', np.float64),
-                             ('prescan', np.float64),]
+                             ('nsources', np.int64),]
 
     optional_keys = {
         'cloud_s', 'clouds', 'decpos', 'dec_move', 'dec_s', 'rapos', 'ra_move', 'ra_s',
@@ -223,6 +239,8 @@ def main(args):
 
     for i, filename in enumerate(sorted_images):
         source = SourceFile.open_file(filename)
+        image_filename = filename.replace('.phot', '')
+        source_extract = SourceFile.open_file(image_filename.replace('.fits', '.cat'))
 
         # Extract imagelist data
         mjd = source.header['mjd']
@@ -232,8 +250,8 @@ def main(args):
                 imagelist_data[key.upper()][i] = source.header.get(key)
             else:
                 imagelist_data[key.upper()][i] = source.header[key]
-        
-        # WCS headers that have been renamed
+
+        # WCS headers that have been renamed
         imagelist_data['CTYPE1'][i] = source.header['TCTYP3']
         imagelist_data['CTYPE2'][i] = source.header['TCTYP3']
         imagelist_data['CRPIX1'][i] = source.header['TCRPX3']
@@ -248,6 +266,8 @@ def main(args):
         imagelist_data['PV2_3'][i] = source.header['TV5_3']
         imagelist_data['PV2_5'][i] = source.header['TV5_5']
         imagelist_data['PV2_7'][i] = source.header['PV2_7']
+
+        imagelist_data['NSOURCES'][i] = len(source_extract)
 
         # Extract image data
         image_map['HJD'].set_data(i, mjd + source.data['hjd_correction'])

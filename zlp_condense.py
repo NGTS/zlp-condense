@@ -130,8 +130,7 @@ def main(args):
                                         ('ccdtemp', np.float32),
                                         ('ccdtempx', np.float32),
                                         ('chstemp', np.float32),
-                                        ('cloud_s', np.float32),
-                                        ('clouds', np.float32),
+                                        ('frame_sn', np.float32),
                                         ('cmd_dec', np.float32),
                                         ('cmd_ra', np.float32),
                                         ('crowded', np.int32),
@@ -232,7 +231,7 @@ def main(args):
                              ('nsources', np.int64),]
 
     optional_keys = {
-        'cloud_s', 'clouds', 'decpos', 'dec_move', 'dec_s', 'rapos', 'ra_move', 'ra_s',
+        'frame_sn', 'decpos', 'dec_move', 'dec_s', 'rapos', 'ra_move', 'ra_s',
         'fwhm', 'seeing', 'shift', 't', 'wcscompl'
     }
     full_imagelist_data_type = [

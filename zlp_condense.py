@@ -211,6 +211,14 @@ def main(args):
                                         ('yencpos1', np.int64),
                                         ('adu_dev', np.float32),]
 
+    # Add the psf measurements
+    for i in range(1, 10):
+        for key in ['a', 'b', 't']:
+            imagelist_from_header_data_dtype.append(
+                    ('psf_{key}_{i}'.format(key=key, i=i), np.float32)
+                    )
+
+
     imagelist_extra_dtype = [('cd1_1', np.float64),
                              ('cd1_2', np.float64),
                              ('cd2_1', np.float64),

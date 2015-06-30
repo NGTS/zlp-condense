@@ -321,6 +321,11 @@ def main(args):
         for image in image_map.values():
             hdulist.append(image.hdu())
 
+        if args.sha:
+            key_length = 72
+            hdulist[0].header['PIPESHA'] = (args.sha[:key_length],
+                    'git sha of the pipeline')
+
 
 if __name__ == '__main__':
     description = '''Extract data from `imcore_list` output'''
@@ -328,4 +333,6 @@ if __name__ == '__main__':
     parser.add_argument('filename', nargs='+')
     parser.add_argument('-o', '--output', required=True)
     parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('--sha', help='Store pipeline sha',
+            required=False)
     main(parser.parse_args())

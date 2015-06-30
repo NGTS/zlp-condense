@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import division, print_function, absolute_import
+
 import sys
 from astropy.io import fits
+import os
+import inspect
 
-def main():
-    fname = sys.argv[1]
+def assert_psf_keys_present(fname):
+    print('\t', inspect.currentframe().f_code.co_name)
     imagelist = fits.getdata(fname, 'imagelist')
     column_names = set(key.lower() for key in imagelist.columns.names)
 
@@ -13,5 +17,21 @@ def main():
 
     for key in required_keys:
         assert key in column_names, 'Cannot find key {}'.format(key)
+
+def assert_pipeline_sha_present(fname):
+    print('\t', inspect.currentframe().f_code.co_name)
+    header = fits.getheader(fname)
+    sha = header['pipesha']
+    expected = os.environ['TESTSHA']
+    assert sha.strip() == expected.strip(), '{} != {}'.format(
+            sha, expected)
+
+def main():
+    fname = sys.argv[1]
+
+    assert_psf_keys_present(fname)
+    assert_pipeline_sha_present(fname)
+
+
 if __name__ == '__main__':
     main()

@@ -323,8 +323,10 @@ def main(args):
 
         if args.sha:
             key_length = 72
-            hdulist[0].header['PIPESHA'] = (args.sha[:key_length],
-                    'git sha of the pipeline')
+            logger.info('Rendering pipeline sha %s', args.sha)
+            short_sha = args.sha[:key_length]
+            logger.debug('short sha %s', short_sha)
+            hdulist[0].header['PIPESHA'] = (short_sha, 'git sha of the pipeline')
 
 
 if __name__ == '__main__':

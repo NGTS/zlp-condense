@@ -274,18 +274,18 @@ def main(args):
 
         # WCS headers that have been renamed
         imagelist_data['CTYPE1'][i] = source.header['TCTYP3']
-        imagelist_data['CTYPE2'][i] = source.header['TCTYP3']
+        imagelist_data['CTYPE2'][i] = source.header['TCTYP6']
         imagelist_data['CRPIX1'][i] = source.header['TCRPX3']
-        imagelist_data['CRPIX2'][i] = source.header['TCRPX5']
+        imagelist_data['CRPIX2'][i] = source.header['TCRPX6']
         imagelist_data['CRVAL1'][i] = source.header['TCRVL3']
-        imagelist_data['CRVAL2'][i] = source.header['TCRVL5']
+        imagelist_data['CRVAL2'][i] = source.header['TCRVL6']
         imagelist_data['CD1_1'][i] = source.header['TC3_3']
-        imagelist_data['CD1_2'][i] = source.header['TC3_5']
-        imagelist_data['CD2_1'][i] = source.header['TC5_3']
-        imagelist_data['CD2_2'][i] = source.header['TC5_5']
-        imagelist_data['PV2_1'][i] = source.header['TV5_1']
-        imagelist_data['PV2_3'][i] = source.header['TV5_3']
-        imagelist_data['PV2_5'][i] = source.header['TV5_5']
+        imagelist_data['CD1_2'][i] = source.header['TC3_6']
+        imagelist_data['CD2_1'][i] = source.header['TC6_3']
+        imagelist_data['CD2_2'][i] = source.header['TC6_6']
+        imagelist_data['PV2_1'][i] = source.header['TV6_1']
+        imagelist_data['PV2_3'][i] = source.header['TV6_3']
+        imagelist_data['PV2_5'][i] = source.header['TV6_5']
         imagelist_data['PV2_7'][i] = source.header['PV2_7']
 
         imagelist_data['NSOURCES'][i] = len(source_extract)

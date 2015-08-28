@@ -238,6 +238,7 @@ def main(args):
                              ('tmid', np.float64),
                              ('nsources', np.int64),]
 
+    # Don't error if these keys are missing
     optional_keys = {
         'frame_sn', 'decpos', 'dec_move', 'dec_s', 'rapos', 'ra_move', 'ra_s',
         'fwhm', 'seeing', 'shift', 't', 'wcscompl'

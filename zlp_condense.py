@@ -209,7 +209,10 @@ def main(args):
                                         ('xencpos1', np.int64),
                                         ('yencpos0', np.int64),
                                         ('yencpos1', np.int64),
-                                        ('adu_dev', np.float32),]
+                                        ('adu_dev', np.float32),
+                                        ('vi_plus', np.int32),
+                                        ('vi_minus', np.int32),
+                                        ]
 
     # Add the psf measurements
     for i in range(1, 10):
@@ -241,7 +244,7 @@ def main(args):
     # Don't error if these keys are missing
     optional_keys = {
         'frame_sn', 'decpos', 'dec_move', 'dec_s', 'rapos', 'ra_move', 'ra_s',
-        'fwhm', 'seeing', 'shift', 't', 'wcscompl'
+        'fwhm', 'seeing', 'shift', 't', 'wcscompl', 'vi_plus', 'vi_minus',
     }
     full_imagelist_data_type = [
         (key.upper(), typ)

@@ -140,6 +140,8 @@
 * `overscan`
 * `overscan_full`
 * `prescan`
+* `vi_plus`
+* `vi_minus`
 
 ## Catalogue
 

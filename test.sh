@@ -7,7 +7,7 @@ export TESTSHA=testsha
 
 main() {
     echo "Running main script"
-    ./zlp_condense.py -o ${FNAME} $(find ../zlp-script/testdata/Reduction/output/ZLPTest/ZLPTest_image_NG0953-4538/ -name '*.phot') --sha $TESTSHA -v
+    ./zlp_condense.py -o ${FNAME} $(find ../zlp-script/testdata/Reduction/output/ZLPTest/ZLPTest_image_NG2000-4500/ -name '*.phot') --sha $TESTSHA -v
     echo "Verifying"
     verify
 }

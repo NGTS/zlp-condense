@@ -1,3 +1,5 @@
 **/*.o
 zlp-condense
 out.fits
+testdata/*
+!testdata/.gitkeep

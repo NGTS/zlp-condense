@@ -12,8 +12,16 @@ standard_test() {
     verify
 }
 
+without_voltages_test() {
+    echo "Running main script"
+    ./zlp_condense.py -o ${FNAME} $(find testdata/missing_voltage_key -name '*.phot') --sha $TESTSHA -v
+    echo "Verifying"
+    verify
+}
+
 main() {
     standard_test
+    without_voltages_test
 }
 
 verify() {

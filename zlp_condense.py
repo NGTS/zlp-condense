@@ -272,7 +272,7 @@ def main(args):
         imagelist_data['TMID'][i] = mjd
         for (key, typ) in imagelist_from_header_data_dtype:
             if key.lower() in optional_keys:
-                imagelist_data[key.upper()][i] = source.header.get(key)
+                imagelist_data[key.upper()][i] = source.header.get(key, 0)
             else:
                 imagelist_data[key.upper()][i] = source.header[key]
 

@@ -5,11 +5,15 @@ set -e
 FNAME=out.fits
 export TESTSHA=testsha
 
-main() {
+standard_test() {
     echo "Running main script"
-    ./zlp_condense.py -o ${FNAME} $(find ../zlp-script/testdata/Reduction/output/ZLPTest/ZLPTest_image_NG2000-4500/ -name '*.phot') --sha $TESTSHA -v
+    ./zlp_condense.py -o ${FNAME} $(find testdata/standard -name '*.phot') --sha $TESTSHA -v
     echo "Verifying"
     verify
+}
+
+main() {
+    standard_test
 }
 
 verify() {

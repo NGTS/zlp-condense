@@ -47,6 +47,18 @@ def assert_voltages_present(fname):
     for key in required_keys:
         assert key in column_names, 'Cannot find key {}'.format(key)
 
+@test
+def assert_flux_radii_present(fname):
+    n_apertures = 13
+
+    with fits.open(fname) as infile:
+        for index in range(1, n_apertures + 1):
+            flux_key = 'FLUX_{}'.format(index)
+            error_key = 'ERROR_{}'.format(index)
+
+            assert infile[flux_key].header['RADIUS']
+            assert infile[error_key].header['RADIUS']
+
 
 def main():
     fname = sys.argv[1]
@@ -54,6 +66,7 @@ def main():
     assert_psf_keys_present(fname)
     assert_pipeline_sha_present(fname)
     assert_voltages_present(fname)
+    assert_flux_radii_present(fname)
 
 
 if __name__ == '__main__':

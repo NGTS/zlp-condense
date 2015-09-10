@@ -32,6 +32,18 @@ class SourceFile(object):
     def __len__(self):
         return len(self.data)
 
+    def get_aperture_sizes(self, indices):
+        out = {}
+        for index in indices:
+            flux_key = 'ttype{i}'.format(i=2 * index + 20)
+            error_key = 'ttype{i}'.format(i=2 * index + 21)
+            out[index] = {
+                'flux': self.header.comments[flux_key],
+                'error': self.header.comments[error_key],
+            }
+
+        return out
+
 
 class Image(SourceFile):
     '''
@@ -261,6 +273,8 @@ def main(args):
     image_names.extend(['ERROR_{}'.format(i) for i in flux_hdu_indexes])
     image_map = {name: image(name) for name in image_names}
 
+    aperture_sizes = first.get_aperture_sizes(flux_hdu_indexes)
+
     logger.info('Iterating over files')
     for i, filename in enumerate(sorted_images):
         logger.info(filename)
@@ -332,6 +346,12 @@ def main(args):
             short_sha = args.sha[:key_length]
             logger.debug('short sha %s', short_sha)
             hdulist[0].header['PIPESHA'] = (short_sha, 'git sha of the pipeline')
+
+        for index in flux_hdu_indexes:
+            flux_str = aperture_sizes[index]['flux']
+            err_str = aperture_sizes[index]['error']
+            hdulist['FLUX_{}'.format(index)].header['radius'] = flux_str
+            hdulist['ERROR_{}'.format(index)].header['radius'] = err_str
 
 
 if __name__ == '__main__':

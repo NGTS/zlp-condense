@@ -7,10 +7,19 @@ import sys
 from astropy.io import fits
 import os
 import inspect
+from functools import wraps
+
+def test(fn):
+    @wraps(fn)
+    def inner(*args, **kwargs):
+        print('\t', fn.func_code.co_name, end='')
+        fn(*args, **kwargs)
+        print('\t\tok')
+    return inner
 
 
+@test
 def assert_psf_keys_present(fname):
-    print('\t', inspect.currentframe().f_code.co_name)
     imagelist = fits.getdata(fname, 'imagelist')
     column_names = set(key.lower() for key in imagelist.columns.names)
 
@@ -20,17 +29,16 @@ def assert_psf_keys_present(fname):
         assert key in column_names, 'Cannot find key {}'.format(key)
 
 
+@test
 def assert_pipeline_sha_present(fname):
-    print('\t', inspect.currentframe().f_code.co_name)
     header = fits.getheader(fname)
     sha = header['pipesha']
     expected = os.environ['TESTSHA']
     assert sha.strip() == expected.strip(), '{} != {}'.format(sha, expected)
 
 
+@test
 def assert_voltages_present(fname):
-    print('\t', inspect.currentframe().f_code.co_name)
-
     imagelist = fits.getdata(fname, 'imagelist')
     column_names = set(key.lower() for key in imagelist.columns.names)
 

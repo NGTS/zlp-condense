@@ -254,10 +254,11 @@ def main(args):
     imagelist_data = np.recarray(nimages, dtype=full_imagelist_data_type)
 
     logger.debug('Allocating memory for image HDUs')
+    flux_hdu_indexes = list(range(1, 14))
     image = lambda name: FITSImage(name, nimages, napertures)
     image_names = ['HJD', 'FLUX', 'FLUXERR', 'CCDX', 'CCDY', 'SKYBKG']
-    image_names.extend(['FLUX_{}'.format(i + 1) for i in list(range(4))])
-    image_names.extend(['ERROR_{}'.format(i + 1) for i in list(range(4))])
+    image_names.extend(['FLUX_{}'.format(i) for i in flux_hdu_indexes])
+    image_names.extend(['ERROR_{}'.format(i) for i in flux_hdu_indexes])
     image_map = {name: image(name) for name in image_names}
 
     logger.info('Iterating over files')
@@ -302,9 +303,9 @@ def main(args):
         image_map['CCDY'].set_data(i, source.data['Y_coordinate'])
         image_map['SKYBKG'].set_data(i, source.data['Sky_level'])
 
-        for (image_index, image_key) in enumerate([2, 4, 5, 6]):
-            hdu_key = 'FLUX_{}'.format(image_index + 1)
-            error_key = 'ERROR_{}'.format(image_index + 1)
+        for image_key in flux_hdu_indexes:
+            hdu_key = 'FLUX_{}'.format(image_key)
+            error_key = 'ERROR_{}'.format(image_key)
             source_flux_key = 'Aper_flux_{}'.format(image_key)
             source_error_key = '{}_err'.format(source_flux_key)
             image_map[hdu_key].set_data(i, source.data[source_flux_key])

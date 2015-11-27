@@ -305,7 +305,7 @@ def main(args):
         imagelist_data['PV2_1'][i] = source.header['TV6_1']
         imagelist_data['PV2_3'][i] = source.header['TV6_3']
         imagelist_data['PV2_5'][i] = source.header['TV6_5']
-        imagelist_data['PV2_7'][i] = source.header['PV2_7']
+        imagelist_data['PV2_7'][i] = source.header['TV6_7']
 
         imagelist_data['NSOURCES'][i] = len(source_extract)
 
